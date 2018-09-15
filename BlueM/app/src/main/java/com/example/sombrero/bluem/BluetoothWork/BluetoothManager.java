@@ -34,7 +34,7 @@ public class BluetoothManager {
 
         if (!bluetoothAdapter.isEnabled()) {
             Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-            outputActivity.showEnableBtDialog(enableBtIntent);
+            //outputActivity.showEnableBtDialog(enableBtIntent);
         }
         else {
             loadPairedDevices();
@@ -44,7 +44,7 @@ public class BluetoothManager {
     public void loadPairedDevices() {
         Set<BluetoothDevice> pairedDevices = bluetoothAdapter.getBondedDevices();
         for (BluetoothDevice device : pairedDevices) {
-            outputActivity.outputFoundedDevices(device);
+            //outputActivity.outputFoundedDevices(device);
         }
     }
 
