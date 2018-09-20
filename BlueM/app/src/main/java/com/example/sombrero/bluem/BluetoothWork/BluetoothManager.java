@@ -1,15 +1,15 @@
 package com.example.sombrero.bluem.BluetoothWork;
 
+import android.arch.lifecycle.MutableLiveData;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 
-import com.example.sombrero.bluem.Activities.BaseActivity;
+import com.example.sombrero.bluem.Exceptions.BluetoothOffException;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -20,32 +20,23 @@ import java.util.Set;
 public class BluetoothManager {
 
     private BluetoothAdapter bluetoothAdapter;
-    private BaseActivity outputActivity;
 
     private Handler mHandler;
 
-    public BluetoothManager(BaseActivity activity) {
-        outputActivity = activity;
 
+    public BluetoothManager() throws BluetoothOffException {
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         if (bluetoothAdapter == null) {
             throw new RuntimeException("This device does not support bluetooth!");
         }
 
         if (!bluetoothAdapter.isEnabled()) {
-            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-            //outputActivity.showEnableBtDialog(enableBtIntent);
-        }
-        else {
-            loadPairedDevices();
+            throw new BluetoothOffException("Bluetooth is offed!");
         }
     }
 
-    public void loadPairedDevices() {
-        Set<BluetoothDevice> pairedDevices = bluetoothAdapter.getBondedDevices();
-        for (BluetoothDevice device : pairedDevices) {
-            //outputActivity.outputFoundedDevices(device);
-        }
+    public Set<BluetoothDevice> LoadPairedDevices() {
+        return bluetoothAdapter.getBondedDevices();
     }
 
     public void connect(BluetoothDevice device) {
