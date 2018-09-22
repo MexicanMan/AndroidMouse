@@ -111,7 +111,7 @@
             android:layout_marginRight="88dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:onClick="@{() -> DataContext.connect()}"
+            android:onClick="@{() -> DataContext.connectToBluetoothDevice()}"
             android:text="Connect"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

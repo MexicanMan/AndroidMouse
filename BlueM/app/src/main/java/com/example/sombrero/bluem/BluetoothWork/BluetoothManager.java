@@ -60,7 +60,7 @@ public class BluetoothManager {
                 Method m = device.getClass().getMethod("createRfcommSocket",new Class[] { int.class });
                 tmpSocket = (BluetoothSocket) m.invoke(device, channel);
 
-                // Get a BluetoothSocket to connect with the given BluetoothDevice.
+                // Get a BluetoothSocket to connectToBluetoothDevice with the given BluetoothDevice.
                 // MY_UUID is the app's UUID string, also used in the server code.
                 //tmpSocket = device.createRfcommSocketToServiceRecord(BTMODULEUUID);
             } catch (Exception e) {
@@ -79,7 +79,7 @@ public class BluetoothManager {
                 // until it succeeds or throws an exception.
                 socket.connect();
             } catch (IOException connectException) {
-                // Unable to connect; close the socket and return.
+                // Unable to connectToBluetoothDevice; close the socket and return.
                 try {
                     socket.close();
                 } catch (IOException closeException) {
@@ -189,7 +189,7 @@ public class BluetoothManager {
             try {
                 socket.close();
             } catch (IOException e) {
-                Log.e("Error", "Could not close the connect socket", e);
+                Log.e("Error", "Could not close the connectToBluetoothDevice socket", e);
             }
         }
     }

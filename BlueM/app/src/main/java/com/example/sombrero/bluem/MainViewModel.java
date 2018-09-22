@@ -12,7 +12,7 @@ import com.example.sombrero.bluem.Utils.MyMutableLiveData;
 import java.util.ArrayList;
 import java.util.Set;
 
-public class MainViewModel extends ViewModel implements Observable {
+public class MainViewModel extends ViewModel {
 
     ///region Fields
 
@@ -53,9 +53,6 @@ public class MainViewModel extends ViewModel implements Observable {
     ///endregion
 
     private int choosedDeviceNumber = -1;
-
-    private PropertyChangeRegistry callbacks = new PropertyChangeRegistry();
-
     private BluetoothManager bluetoothManager;
 
     ///endregion
@@ -89,33 +86,11 @@ public class MainViewModel extends ViewModel implements Observable {
         sensorType.setValue(type);
     }
 
-    public void connect() {
+    public void connectToBluetoothDevice() {
         if (choosedDeviceNumber != -1)
             bluetoothManager.connect(pairedDevices.getValue().get(choosedDeviceNumber));
         else
             toastMessage.setValue("Choose device first!");
     }
-
-    ///region ObservableInterface
-
-    @Override
-    public void addOnPropertyChangedCallback(Observable.OnPropertyChangedCallback callback) {
-        callbacks.add(callback);
-    }
-
-    @Override
-    public void removeOnPropertyChangedCallback(Observable.OnPropertyChangedCallback callback) {
-        callbacks.remove(callback);
-    }
-
-    private void notifyChange() {
-        callbacks.notifyChange(this, 0);
-    }
-
-    private void notifyPropertyChanged(int fieldId) {
-        callbacks.notifyChange(this,fieldId);
-    }
-
-    ///endregion
 
 }
