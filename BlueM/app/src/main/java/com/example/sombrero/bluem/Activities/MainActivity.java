@@ -6,6 +6,8 @@ import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
 
 import com.example.sombrero.bluem.MainViewModel;
 import com.example.sombrero.bluem.R;
@@ -37,9 +39,12 @@ public class MainActivity extends BaseActivity {
         mainViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
         binding.setDataContext(mainViewModel);
 
-        // PairedDevicesList initiation
+        // PairedDevicesList initiation and configuration
         pairedDevicesAdapter = new PairedDevicesList(this, new ArrayList<BluetoothDevice>());
         binding.pairedDevicesListView.setAdapter(pairedDevicesAdapter);
+        binding.pairedDevicesListView.setOnItemClickListener((parent, view, position, id) -> {
+            this.mainViewModel.onPairedDevicesItemChosen(position);
+        });
 
         // MainViewModel event handlers configuration
         mainViewModel.getActivityScreen().observe(this, activityString -> {

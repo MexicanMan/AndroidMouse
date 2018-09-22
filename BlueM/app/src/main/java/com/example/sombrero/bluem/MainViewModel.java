@@ -6,6 +6,7 @@ import android.databinding.Observable;
 import android.databinding.PropertyChangeRegistry;
 
 import com.example.sombrero.bluem.BluetoothWork.BluetoothManager;
+import com.example.sombrero.bluem.SensorsWork.SensorType;
 import com.example.sombrero.bluem.Utils.MyMutableLiveData;
 
 import java.util.ArrayList;
@@ -33,6 +34,9 @@ public class MainViewModel extends ViewModel implements Observable {
 
     ///endregion
 
+    private int choosedDeviceNumber = -1;
+    private SensorType.Type sensorType = SensorType.Type.Gyro;
+
     private PropertyChangeRegistry callbacks = new PropertyChangeRegistry();
 
     private BluetoothManager bluetoothManager;
@@ -57,8 +61,12 @@ public class MainViewModel extends ViewModel implements Observable {
         pairedDevices.setValue(new ArrayList<>(devices));
     }
 
-    public void onPairedDevicesItemChosen() {
+    public void onPairedDevicesItemChosen(int position) {
+        choosedDeviceNumber = position;
+    }
 
+    public void onSensorTypeChanged(SensorType.Type type) {
+        sensorType = type;
     }
 
     ///region ObservableInterface

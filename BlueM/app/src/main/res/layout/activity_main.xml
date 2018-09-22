@@ -94,6 +94,7 @@
                 android:enabled="false"
                 android:text="Accelerometer"
                 android:checked="false"
+                android:buttonTint="@color/colorTeal"
                 android:background="@android:color/transparent" />
         </RadioGroup>
 
