@@ -42,7 +42,6 @@ public class MainViewModel extends ViewModel implements Observable {
     public MainViewModel() {
         activityScreen = new MyMutableLiveData<>();
         pairedDevices = new MyMutableLiveData<>();
-        pairedDevices.setValue(new ArrayList<>());
 
         // BluetoothManager initiation and configuration
         bluetoothManager = new BluetoothManager();

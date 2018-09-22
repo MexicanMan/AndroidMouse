@@ -2,6 +2,7 @@ package com.example.sombrero.bluem.Activities;
 
 import android.arch.lifecycle.ViewModelProviders;
 import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
@@ -9,6 +10,8 @@ import android.os.Bundle;
 import com.example.sombrero.bluem.MainViewModel;
 import com.example.sombrero.bluem.R;
 import com.example.sombrero.bluem.databinding.ActivityMainBinding;
+
+import java.util.ArrayList;
 
 public class MainActivity extends BaseActivity {
 
@@ -35,7 +38,7 @@ public class MainActivity extends BaseActivity {
         binding.setDataContext(mainViewModel);
 
         // PairedDevicesList initiation
-        pairedDevicesAdapter = new PairedDevicesList(this, mainViewModel.getPairedDevices().getValue());
+        pairedDevicesAdapter = new PairedDevicesList(this, new ArrayList<BluetoothDevice>());
         binding.pairedDevicesListView.setAdapter(pairedDevicesAdapter);
 
         // MainViewModel event handlers configuration
