@@ -4,6 +4,7 @@ import android.arch.lifecycle.MutableLiveData;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
+import android.databinding.ObservableBoolean;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -19,23 +20,27 @@ import java.util.Set;
 
 public class BluetoothManager {
 
+    private boolean isBluetoothEnabled = true;
+    public boolean getIsBluetoothEnabled() {
+        return isBluetoothEnabled;
+    }
+
     private BluetoothAdapter bluetoothAdapter;
 
     private Handler mHandler;
 
-
-    public BluetoothManager() throws BluetoothOffException {
+    public BluetoothManager() {
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         if (bluetoothAdapter == null) {
             throw new RuntimeException("This device does not support bluetooth!");
         }
 
         if (!bluetoothAdapter.isEnabled()) {
-            throw new BluetoothOffException("Bluetooth is offed!");
+            isBluetoothEnabled = false;
         }
     }
 
-    public Set<BluetoothDevice> LoadPairedDevices() {
+    public Set<BluetoothDevice> loadPairedDevices() {
         return bluetoothAdapter.getBondedDevices();
     }
 

@@ -5,9 +5,6 @@ import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.view.View;
-import android.widget.AdapterView;
 
 import com.example.sombrero.bluem.MainViewModel;
 import com.example.sombrero.bluem.R;
@@ -24,16 +21,24 @@ public class MainActivity extends BaseActivity {
     ///region Fields
 
     private MainViewModel mainViewModel;
+    private PairedDevicesList pairedDevicesAdapter;
 
     ///endregion
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // MainViewModel initiation
         ActivityMainBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         mainViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
         binding.setDataContext(mainViewModel);
 
+        // PairedDevicesList initiation
+        pairedDevicesAdapter = new PairedDevicesList(this, mainViewModel.getPairedDevices().getValue());
+        binding.pairedDevicesListView.setAdapter(pairedDevicesAdapter);
+
+        // MainViewModel event handlers configuration
         mainViewModel.getActivityScreen().observe(this, activityString -> {
                 switch (activityString) {
                     case "BluetoothReq":
@@ -46,6 +51,10 @@ public class MainActivity extends BaseActivity {
                         break;
                 }
             });
+        mainViewModel.getPairedDevices().observe(this, pairedDevicesList -> {
+            this.pairedDevicesAdapter.clear();
+            this.pairedDevicesAdapter.addAll(pairedDevicesList);
+        });
     }
 
     ///region BluetoothDialog
@@ -61,7 +70,7 @@ public class MainActivity extends BaseActivity {
                 if (resultCode != RESULT_OK)
                     finish();
                 else
-                    mainViewModel.BluetoothLoadPairedDevices();
+                    mainViewModel.bluetoothLoadPairedDevices();
                 break;
             default:
                 throw new RuntimeException("Unknown requestCode!");

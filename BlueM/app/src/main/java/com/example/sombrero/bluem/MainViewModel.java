@@ -6,9 +6,9 @@ import android.databinding.Observable;
 import android.databinding.PropertyChangeRegistry;
 
 import com.example.sombrero.bluem.BluetoothWork.BluetoothManager;
-import com.example.sombrero.bluem.Exceptions.BluetoothOffException;
 import com.example.sombrero.bluem.Utils.MyMutableLiveData;
 
+import java.util.ArrayList;
 import java.util.Set;
 
 public class MainViewModel extends ViewModel implements Observable {
@@ -24,6 +24,15 @@ public class MainViewModel extends ViewModel implements Observable {
 
     ///endregion
 
+    ///region PairedDevices
+
+    private MyMutableLiveData<ArrayList<BluetoothDevice>> pairedDevices;
+    public MyMutableLiveData<ArrayList<BluetoothDevice>> getPairedDevices() {
+        return pairedDevices;
+    }
+
+    ///endregion
+
     private PropertyChangeRegistry callbacks = new PropertyChangeRegistry();
 
     private BluetoothManager bluetoothManager;
@@ -32,17 +41,25 @@ public class MainViewModel extends ViewModel implements Observable {
 
     public MainViewModel() {
         activityScreen = new MyMutableLiveData<>();
+        pairedDevices = new MyMutableLiveData<>();
+        pairedDevices.setValue(new ArrayList<>());
 
-        try {
-            bluetoothManager = new BluetoothManager();
-            BluetoothLoadPairedDevices();
-        } catch (BluetoothOffException e) {
+        // BluetoothManager initiation and configuration
+        bluetoothManager = new BluetoothManager();
+        if (!bluetoothManager.getIsBluetoothEnabled()) {
             activityScreen.setValue("BluetoothReq");
+        } else {
+            bluetoothLoadPairedDevices();
         }
     }
 
-    public void BluetoothLoadPairedDevices() {
-        Set<BluetoothDevice> devices = bluetoothManager.LoadPairedDevices();
+    public void bluetoothLoadPairedDevices() {
+        Set<BluetoothDevice> devices = bluetoothManager.loadPairedDevices();
+        pairedDevices.setValue(new ArrayList<>(devices));
+    }
+
+    public void onPairedDevicesItemChosen() {
+
     }
 
     ///region ObservableInterface
