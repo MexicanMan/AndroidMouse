@@ -6,8 +6,7 @@ import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.AdapterView;
+import android.widget.Toast;
 
 import com.example.sombrero.bluem.MainViewModel;
 import com.example.sombrero.bluem.R;
@@ -44,6 +43,7 @@ public class MainActivity extends BaseActivity {
         binding.pairedDevicesListView.setAdapter(pairedDevicesAdapter);
         binding.pairedDevicesListView.setOnItemClickListener((parent, view, position, id) -> {
             this.mainViewModel.onPairedDevicesItemChosen(position);
+            parent.setSelection(position);
         });
 
         // MainViewModel event handlers configuration
@@ -54,11 +54,15 @@ public class MainActivity extends BaseActivity {
                         this.showEnableBtDialog(enableBtIntent);
                         break;
                     case "MouseScreen":
+
                         break;
                     default:
                         break;
                 }
             });
+        mainViewModel.getToastMessage().observe(this, toastMessage -> {
+            Toast.makeText(this, toastMessage, Toast.LENGTH_SHORT).show();
+        });
         mainViewModel.getPairedDevices().observe(this, pairedDevicesList -> {
             this.pairedDevicesAdapter.clear();
             this.pairedDevicesAdapter.addAll(pairedDevicesList);

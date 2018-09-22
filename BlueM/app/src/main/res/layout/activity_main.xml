@@ -4,6 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+        <import type="com.example.sombrero.bluem.SensorsWork.SensorType" />
+
         <variable
             name="DataContext"
             type="com.example.sombrero.bluem.MainViewModel" />
@@ -81,7 +83,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:checked="true"
+                android:checked="@{DataContext.sensorType.equals(SensorType.GYRO)}"
+                android:onClick="@{() -> DataContext.onSensorTypeChanged(SensorType.GYRO)}"
                 android:text="Gyroscope"
                 android:buttonTint="@color/colorTeal"
                 android:background="@android:color/transparent" />
@@ -91,9 +94,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:enabled="false"
                 android:text="Accelerometer"
-                android:checked="false"
+                android:checked="@{DataContext.sensorType.equals(SensorType.ACCEL)}"
+                android:onClick="@{() -> DataContext.onSensorTypeChanged(SensorType.ACCEL)}"
                 android:buttonTint="@color/colorTeal"
                 android:background="@android:color/transparent" />
         </RadioGroup>
@@ -108,6 +111,7 @@
             android:layout_marginRight="88dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
+            android:onClick="@{() -> DataContext.connect()}"
             android:text="Connect"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

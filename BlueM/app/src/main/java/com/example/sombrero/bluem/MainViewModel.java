@@ -25,6 +25,15 @@ public class MainViewModel extends ViewModel implements Observable {
 
     ///endregion
 
+    ///region ToastMessage
+
+    private MyMutableLiveData<String> toastMessage;
+    public MyMutableLiveData<String> getToastMessage() {
+        return toastMessage;
+    }
+
+    ///endregion
+
     ///region PairedDevices
 
     private MyMutableLiveData<ArrayList<BluetoothDevice>> pairedDevices;
@@ -34,8 +43,16 @@ public class MainViewModel extends ViewModel implements Observable {
 
     ///endregion
 
+    ///region SensorType
+
+    private MyMutableLiveData<SensorType> sensorType;
+    public MyMutableLiveData<SensorType> getSensorType() {
+        return sensorType;
+    }
+
+    ///endregion
+
     private int choosedDeviceNumber = -1;
-    private SensorType.Type sensorType = SensorType.Type.Gyro;
 
     private PropertyChangeRegistry callbacks = new PropertyChangeRegistry();
 
@@ -45,7 +62,10 @@ public class MainViewModel extends ViewModel implements Observable {
 
     public MainViewModel() {
         activityScreen = new MyMutableLiveData<>();
+        toastMessage = new MyMutableLiveData<>();
         pairedDevices = new MyMutableLiveData<>();
+        sensorType = new MyMutableLiveData<>();
+        sensorType.setValue(SensorType.GYRO);
 
         // BluetoothManager initiation and configuration
         bluetoothManager = new BluetoothManager();
@@ -65,8 +85,15 @@ public class MainViewModel extends ViewModel implements Observable {
         choosedDeviceNumber = position;
     }
 
-    public void onSensorTypeChanged(SensorType.Type type) {
-        sensorType = type;
+    public void onSensorTypeChanged(SensorType type) {
+        sensorType.setValue(type);
+    }
+
+    public void connect() {
+        if (choosedDeviceNumber != -1)
+            bluetoothManager.connect(pairedDevices.getValue().get(choosedDeviceNumber));
+        else
+            toastMessage.setValue("Choose device first!");
     }
 
     ///region ObservableInterface
