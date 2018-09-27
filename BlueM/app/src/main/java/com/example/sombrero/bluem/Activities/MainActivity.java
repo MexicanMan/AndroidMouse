@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import com.example.sombrero.bluem.MainViewModel;
 import com.example.sombrero.bluem.R;
+import com.example.sombrero.bluem.Utils.ActivityScreenType;
 import com.example.sombrero.bluem.databinding.ActivityMainBinding;
 
 import java.util.ArrayList;
@@ -47,13 +48,13 @@ public class MainActivity extends BaseActivity {
         });
 
         // MainViewModel event handlers configuration
-        mainViewModel.getActivityScreen().observe(this, activityString -> {
-                switch (activityString) {
-                    case "BluetoothReq":
+        mainViewModel.getActivityScreen().observe(this, activityType -> {
+                switch (activityType) {
+                    case BLUETOOTH_REQ:
                         Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
                         this.showEnableBtDialog(enableBtIntent);
                         break;
-                    case "MouseScreen":
+                    case MOUSE_SCREEN:
 
                         break;
                     default:

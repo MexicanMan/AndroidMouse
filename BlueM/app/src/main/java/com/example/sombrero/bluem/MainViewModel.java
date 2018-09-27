@@ -3,10 +3,10 @@ package com.example.sombrero.bluem;
 import android.arch.lifecycle.ViewModel;
 import android.bluetooth.BluetoothDevice;
 import android.databinding.Observable;
-import android.databinding.PropertyChangeRegistry;
 
 import com.example.sombrero.bluem.BluetoothWork.BluetoothManager;
 import com.example.sombrero.bluem.SensorsWork.SensorType;
+import com.example.sombrero.bluem.Utils.ActivityScreenType;
 import com.example.sombrero.bluem.Utils.MyMutableLiveData;
 
 import java.util.ArrayList;
@@ -18,13 +18,12 @@ public class MainViewModel extends ViewModel {
 
     ///region ActivityScreen
 
-    private MyMutableLiveData<String> activityScreen;
-    public MyMutableLiveData<String> getActivityScreen() {
+    private MyMutableLiveData<ActivityScreenType> activityScreen;
+    public MyMutableLiveData<ActivityScreenType> getActivityScreen() {
         return activityScreen;
     }
 
     ///endregion
-
     ///region ToastMessage
 
     private MyMutableLiveData<String> toastMessage;
@@ -33,7 +32,6 @@ public class MainViewModel extends ViewModel {
     }
 
     ///endregion
-
     ///region PairedDevices
 
     private MyMutableLiveData<ArrayList<BluetoothDevice>> pairedDevices;
@@ -42,12 +40,19 @@ public class MainViewModel extends ViewModel {
     }
 
     ///endregion
-
     ///region SensorType
 
     private MyMutableLiveData<SensorType> sensorType;
     public MyMutableLiveData<SensorType> getSensorType() {
         return sensorType;
+    }
+
+    ///endregion
+    ///region BluetoothWriteThread
+
+    private BluetoothManager.ConnectedWriteThread bluetoothWriteThread;
+    public BluetoothManager.ConnectedWriteThread getBluetoothWriteThread() {
+        return bluetoothWriteThread;
     }
 
     ///endregion
@@ -67,10 +72,27 @@ public class MainViewModel extends ViewModel {
         // BluetoothManager initiation and configuration
         bluetoothManager = new BluetoothManager();
         if (!bluetoothManager.getIsBluetoothEnabled()) {
-            activityScreen.setValue("BluetoothReq");
+            activityScreen.setValue(ActivityScreenType.BLUETOOTH_REQ);
         } else {
             bluetoothLoadPairedDevices();
         }
+
+        // BluetoothManager error messages throwing to UI toasts
+        bluetoothManager.getErrorMsg().addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
+            @Override
+            public void onPropertyChanged(Observable sender, int propertyId) {
+                toastMessage.setValue(bluetoothManager.getErrorMsg().get());
+            }
+        });
+
+        bluetoothManager.getResultMsg().addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
+            @Override
+            public void onPropertyChanged(Observable sender, int propertyId) {
+                bluetoothWriteThread = bluetoothManager.getBluetoothWriteThread();
+                toastMessage.setValue(bluetoothManager.getResultMsg().get());
+                activityScreen.setValue(ActivityScreenType.MOUSE_SCREEN);
+            }
+        });
     }
 
     public void bluetoothLoadPairedDevices() {

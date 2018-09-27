@@ -22,7 +22,12 @@
             </intent-filter>
         </activity>
         <activity android:name=".Activities.MouseActivity"
-                  android:screenOrientation="portrait"/>
+                  android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="com.example.sombrero.bluem.SHOW_MOUSE_SCREEN" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>
