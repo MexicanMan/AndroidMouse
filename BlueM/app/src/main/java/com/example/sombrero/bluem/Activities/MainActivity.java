@@ -10,7 +10,6 @@ import android.widget.Toast;
 
 import com.example.sombrero.bluem.MainViewModel;
 import com.example.sombrero.bluem.R;
-import com.example.sombrero.bluem.Utils.ActivityScreenType;
 import com.example.sombrero.bluem.databinding.ActivityMainBinding;
 
 import java.util.ArrayList;
@@ -70,7 +69,7 @@ public class MainActivity extends BaseActivity {
         });
     }
 
-    ///region BluetoothDialog
+    ///region BluetoothDialog setup
 
     public void showEnableBtDialog(Intent enableBtIntent) {
         startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);

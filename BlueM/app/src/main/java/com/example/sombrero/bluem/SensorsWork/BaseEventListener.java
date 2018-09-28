@@ -8,10 +8,8 @@ import com.example.sombrero.bluem.Activities.BaseActivity;
 
 public abstract class BaseEventListener implements SensorEventListener {
 
-    protected BaseActivity outputActivity;
+    public BaseEventListener() {
 
-    public BaseEventListener(BaseActivity activity) {
-        outputActivity = activity;
     }
 
     @Override

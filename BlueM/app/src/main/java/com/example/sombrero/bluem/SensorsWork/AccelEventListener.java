@@ -5,10 +5,9 @@ import android.hardware.SensorEvent;
 
 import com.example.sombrero.bluem.Activities.BaseActivity;
 
-public class GyroEventListener extends BaseEventListener {
+public class AccelEventListener extends BaseEventListener {
 
-    public GyroEventListener() {
-
+    public AccelEventListener() {
     }
 
     @Override
@@ -24,5 +23,4 @@ public class GyroEventListener extends BaseEventListener {
 
         //outputActivity.updateGyroValues(axisX, axisY, axisZ);
     }
-
 }

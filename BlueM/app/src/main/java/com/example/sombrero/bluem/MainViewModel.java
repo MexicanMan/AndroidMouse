@@ -3,10 +3,15 @@ package com.example.sombrero.bluem;
 import android.arch.lifecycle.ViewModel;
 import android.bluetooth.BluetoothDevice;
 import android.databinding.Observable;
+import android.se.omapi.Session;
 
 import com.example.sombrero.bluem.BluetoothWork.BluetoothManager;
+import com.example.sombrero.bluem.SensorsWork.AccelEventListener;
+import com.example.sombrero.bluem.SensorsWork.BaseEventListener;
+import com.example.sombrero.bluem.SensorsWork.GyroEventListener;
 import com.example.sombrero.bluem.SensorsWork.SensorType;
-import com.example.sombrero.bluem.Utils.ActivityScreenType;
+import com.example.sombrero.bluem.Activities.ActivityScreenType;
+import com.example.sombrero.bluem.Utils.MouseConfig;
 import com.example.sombrero.bluem.Utils.MyMutableLiveData;
 
 import java.util.ArrayList;
@@ -48,15 +53,8 @@ public class MainViewModel extends ViewModel {
     }
 
     ///endregion
-    ///region BluetoothWriteThread
 
     private BluetoothManager.ConnectedWriteThread bluetoothWriteThread;
-    public BluetoothManager.ConnectedWriteThread getBluetoothWriteThread() {
-        return bluetoothWriteThread;
-    }
-
-    ///endregion
-
     private int choosedDeviceNumber = -1;
     private BluetoothManager bluetoothManager;
 
@@ -90,9 +88,20 @@ public class MainViewModel extends ViewModel {
             public void onPropertyChanged(Observable sender, int propertyId) {
                 bluetoothWriteThread = bluetoothManager.getBluetoothWriteThread();
                 toastMessage.setValue(bluetoothManager.getResultMsg().get());
-                activityScreen.setValue(ActivityScreenType.MOUSE_SCREEN);
+                setupMouse();
             }
         });
+    }
+
+    public void setupMouse() {
+        BaseEventListener sensor;
+        if (sensorType.getValue() == SensorType.GYRO)
+            sensor = new GyroEventListener();
+        else
+            sensor = new AccelEventListener();
+
+        MouseConfig mouseConfig = new MouseConfig(bluetoothWriteThread, sensor);
+        activityScreen.setValue(ActivityScreenType.MOUSE_SCREEN);
     }
 
     public void bluetoothLoadPairedDevices() {
