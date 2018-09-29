@@ -3,8 +3,6 @@ package com.example.sombrero.bluem.SensorsWork;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 
-import com.example.sombrero.bluem.Activities.BaseActivity;
-
 public class GyroEventListener extends BaseEventListener {
 
     public GyroEventListener() {

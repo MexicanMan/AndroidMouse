@@ -19,6 +19,7 @@ public class MainActivity extends BaseActivity {
     //region Constants
 
     private final static int REQUEST_ENABLE_BT = 1;
+    private final static String SHOW_MOUSE_SCREEN = "com.example.sombrero.bluem.SHOW_MOUSE_SCREEN";
 
     //endregion
 
@@ -54,7 +55,8 @@ public class MainActivity extends BaseActivity {
                         this.showEnableBtDialog(enableBtIntent);
                         break;
                     case MOUSE_SCREEN:
-
+                        Intent intent = new Intent(SHOW_MOUSE_SCREEN);
+                        startActivity(intent);
                         break;
                     default:
                         break;
