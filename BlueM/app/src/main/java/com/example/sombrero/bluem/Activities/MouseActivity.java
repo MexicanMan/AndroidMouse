@@ -17,12 +17,8 @@ public class MouseActivity extends BaseActivity {
         ActivityMouseBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_mouse);
         MouseViewModel mouseViewModel = ViewModelProviders.of(this).get(MouseViewModel.class);
         binding.setDataContext(mouseViewModel);
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-
+        binding.setLifecycleOwner(this);
+        getLifecycle().addObserver(mouseViewModel);
     }
 
 }

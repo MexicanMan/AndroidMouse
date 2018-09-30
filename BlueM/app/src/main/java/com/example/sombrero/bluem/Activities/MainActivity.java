@@ -38,6 +38,7 @@ public class MainActivity extends BaseActivity {
         ActivityMainBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         mainViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
         binding.setDataContext(mainViewModel);
+        binding.setLifecycleOwner(this);
 
         // PairedDevicesList initiation and configuration
         pairedDevicesAdapter = new PairedDevicesList(this, new ArrayList<BluetoothDevice>());
