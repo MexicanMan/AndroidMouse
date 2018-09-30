@@ -3,16 +3,22 @@ package com.example.sombrero.bluem.Utils;
 import com.example.sombrero.bluem.BluetoothWork.BluetoothManager;
 import com.example.sombrero.bluem.SensorsWork.BaseEventListener;
 
-import java.io.Serializable;
+public class MouseConfigSingleton {
 
-public class MouseConfig implements Serializable {
-
+    private static MouseConfigSingleton instance;
     private BluetoothManager.ConnectedWriteThread bluetoothWriteThread;
     private BaseEventListener sensorListener;
 
-    public MouseConfig(BluetoothManager.ConnectedWriteThread thread, BaseEventListener sensor) {
-        bluetoothWriteThread = thread;
-        sensorListener = sensor;
+    private MouseConfigSingleton() {  }
+
+    public static void initInstance() {
+        if (instance == null) {
+            instance = new MouseConfigSingleton();
+        }
+    }
+
+    public static MouseConfigSingleton getInstance() {
+        return instance;
     }
 
     public BluetoothManager.ConnectedWriteThread getBluetoothWriteThread() {

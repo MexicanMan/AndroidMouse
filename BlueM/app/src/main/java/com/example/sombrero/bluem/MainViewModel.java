@@ -3,7 +3,6 @@ package com.example.sombrero.bluem;
 import android.arch.lifecycle.ViewModel;
 import android.bluetooth.BluetoothDevice;
 import android.databinding.Observable;
-import android.se.omapi.Session;
 
 import com.example.sombrero.bluem.BluetoothWork.BluetoothManager;
 import com.example.sombrero.bluem.SensorsWork.AccelEventListener;
@@ -11,7 +10,7 @@ import com.example.sombrero.bluem.SensorsWork.BaseEventListener;
 import com.example.sombrero.bluem.SensorsWork.GyroEventListener;
 import com.example.sombrero.bluem.SensorsWork.SensorType;
 import com.example.sombrero.bluem.Activities.ActivityScreenType;
-import com.example.sombrero.bluem.Utils.MouseConfig;
+import com.example.sombrero.bluem.Utils.MouseConfigSingleton;
 import com.example.sombrero.bluem.Utils.MyMutableLiveData;
 
 import java.util.ArrayList;
@@ -54,6 +53,7 @@ public class MainViewModel extends ViewModel {
 
     ///endregion
 
+    private MouseConfigSingleton mouseConfigSingleton;
     private BluetoothManager.ConnectedWriteThread bluetoothWriteThread;
     private int choosedDeviceNumber = -1;
     private BluetoothManager bluetoothManager;
@@ -66,6 +66,7 @@ public class MainViewModel extends ViewModel {
         pairedDevices = new MyMutableLiveData<>();
         sensorType = new MyMutableLiveData<>();
         sensorType.setValue(SensorType.GYRO);
+        mouseConfigSingleton = MouseConfigSingleton.getInstance();
 
         // BluetoothManager initiation and configuration
         bluetoothManager = new BluetoothManager();
@@ -83,6 +84,7 @@ public class MainViewModel extends ViewModel {
             }
         });
 
+        // On bluetooth connection successful
         bluetoothManager.getResultMsg().addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
             @Override
             public void onPropertyChanged(Observable sender, int propertyId) {
@@ -91,17 +93,6 @@ public class MainViewModel extends ViewModel {
                 setupMouse();
             }
         });
-    }
-
-    public void setupMouse() {
-        BaseEventListener sensor;
-        if (sensorType.getValue() == SensorType.GYRO)
-            sensor = new GyroEventListener();
-        else
-            sensor = new AccelEventListener();
-
-        MouseConfig mouseConfig = new MouseConfig(bluetoothWriteThread, sensor);
-        activityScreen.setValue(ActivityScreenType.MOUSE_SCREEN);
     }
 
     public void bluetoothLoadPairedDevices() {
@@ -122,6 +113,18 @@ public class MainViewModel extends ViewModel {
             bluetoothManager.connect(pairedDevices.getValue().get(choosedDeviceNumber));
         else
             toastMessage.setValue("Choose device first!");
+    }
+
+    private void setupMouse() {
+        BaseEventListener sensor;
+        if (sensorType.getValue() == SensorType.GYRO)
+            sensor = new GyroEventListener();
+        else
+            sensor = new AccelEventListener();
+
+        mouseConfigSingleton.setBluetoothWriteThread(bluetoothWriteThread);
+        mouseConfigSingleton.setSensorListener(sensor);
+        activityScreen.setValue(ActivityScreenType.MOUSE_SCREEN);
     }
 
 }
