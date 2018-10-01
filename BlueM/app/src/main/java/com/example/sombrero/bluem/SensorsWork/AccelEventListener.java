@@ -3,11 +3,10 @@ package com.example.sombrero.bluem.SensorsWork;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 
-import com.example.sombrero.bluem.Activities.BaseActivity;
-
 public class AccelEventListener extends BaseEventListener {
 
     public AccelEventListener() {
+        super(Sensor.TYPE_ACCELEROMETER);
     }
 
     @Override
@@ -17,10 +16,7 @@ public class AccelEventListener extends BaseEventListener {
 
     @Override
     public final void onSensorChanged(SensorEvent event) {
-        float axisX = event.values[0];
-        float axisY = event.values[1];
-        float axisZ = event.values[2];
-
-        //outputActivity.updateGyroValues(axisX, axisY, axisZ);
+        axisValues.set(event.values);
+        axisValues.notifyPropertyChanged(0);
     }
 }

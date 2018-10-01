@@ -6,7 +6,7 @@ import android.hardware.SensorEvent;
 public class GyroEventListener extends BaseEventListener {
 
     public GyroEventListener() {
-
+        super(Sensor.TYPE_GYROSCOPE);
     }
 
     @Override
@@ -16,11 +16,8 @@ public class GyroEventListener extends BaseEventListener {
 
     @Override
     public final void onSensorChanged(SensorEvent event) {
-        float axisX = event.values[0];
-        float axisY = event.values[1];
-        float axisZ = event.values[2];
-
-        //outputActivity.updateGyroValues(axisX, axisY, axisZ);
+        axisValues.set(event.values);
+        axisValues.notifyPropertyChanged(0);
     }
 
 }

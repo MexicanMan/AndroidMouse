@@ -66,6 +66,7 @@ public class BluetoothManager {
     public BluetoothManager() {
         errorMsg = new ObservableField<>();
         resultMsg = new ObservableField<>();
+
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         if (bluetoothAdapter == null) {
             throw new RuntimeException("This device does not support bluetooth!");
