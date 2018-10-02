@@ -75,6 +75,9 @@ public class MouseViewModel extends AndroidViewModel implements LifecycleObserve
                 xAxisValue.setValue(Float.toString(values[0]));
                 yAxisValue.setValue(Float.toString(values[1]));
                 zAxisValue.setValue(Float.toString(values[2]));
+
+                String xyValues = Float.toString(values[0]) + " " + Float.toString(values[1]);
+                bluetoothWriteThread.write(xyValues.getBytes());
             }
         });
     }
