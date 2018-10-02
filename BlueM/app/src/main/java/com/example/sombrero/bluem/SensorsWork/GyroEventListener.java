@@ -6,7 +6,7 @@ import android.hardware.SensorEvent;
 public class GyroEventListener extends BaseEventListener {
 
     public GyroEventListener() {
-        super(Sensor.TYPE_GYROSCOPE);
+        super(Sensor.TYPE_ROTATION_VECTOR);
     }
 
     @Override
