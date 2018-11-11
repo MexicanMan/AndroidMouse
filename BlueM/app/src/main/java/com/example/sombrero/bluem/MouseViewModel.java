@@ -19,6 +19,12 @@ import static android.content.Context.SENSOR_SERVICE;
 
 public class MouseViewModel extends AndroidViewModel implements LifecycleObserver {
 
+    ///region Constants
+
+    private final static String BYE_MESSAGE = "BYE";
+
+    ///endregion
+
     ///region AxisValues
 
     private MyMutableLiveData<String> xAxisValue;
@@ -94,6 +100,7 @@ public class MouseViewModel extends AndroidViewModel implements LifecycleObserve
 
     @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
     public void OnActivityDestroy() {
+        bluetoothWriteThread.write(BYE_MESSAGE.getBytes());
         bluetoothWriteThread.cancel();
     }
 

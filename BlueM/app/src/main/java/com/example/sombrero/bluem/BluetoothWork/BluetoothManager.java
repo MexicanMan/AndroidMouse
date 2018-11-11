@@ -153,14 +153,6 @@ public class BluetoothManager {
             Message readMsg = handler.obtainMessage(MessageType.MSG_BASE, -1, -1,
                     "Successfully connected to " + device.getName() + " with address " + device.getAddress() + "!");
             readMsg.sendToTarget();
-            /*String t = "pupa";
-            for (int i=0; i < 5; i++) {
-                thread.write(t.getBytes());
-                try {
-                    sleep(3000);
-                }catch(Exception e)
-                { }
-            }*/
         }
 
         // Closes the client socket and causes the thread to finish.
