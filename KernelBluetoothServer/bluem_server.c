@@ -7,7 +7,9 @@
 #include <linux/errno.h>
 #include <linux/types.h>
 
-#include <linux/input.h>
+#include <linux/netdevice.h>
+#include <linux/ip.h>
+#include <linux/in.h>
 
 #include <net/bluetooth/bluetooth.h>
 #include <net/bluetooth/rfcomm.h>
@@ -18,6 +20,8 @@
 #include <linux/sched/signal.h>
 
 #include <net/sock.h>
+#include <net/tcp.h>
+#include <net/inet_connection_sock.h>
 #include <net/request_sock.h>
 
 #define CHANNEL 1
@@ -26,9 +30,7 @@
 
 static int rfcomm_listener_stopped = 0;
 static int rfcomm_acceptor_stopped = 0;
-static int curr_conn = 0;
-
-static struct input_dev *bluem_dev;
+int curr_conn = 0;
 
 struct rfcomm_conn_handler_data
 {
@@ -86,9 +88,6 @@ int rfcomm_server_receive(struct socket *sock, int id, struct sockaddr_rc *addre
 	while (len == -EAGAIN || len == -ERESTARTSYS);
 
 	printk(KERN_DEBUG "BlueM: client sent: %s\n", buf);
-
-	input_report_rel(bluem_dev, REL_Y, -10);
-	input_sync(bluem_dev);
 
 	return len;
 }
@@ -380,35 +379,14 @@ int rfcomm_server_start(void)
 
 static int __init bluem_init(void)
 {
-	int ret; 
-
+	printk(KERN_DEBUG "BlueM: BlueM initiated.\n");
 	rfcomm_server = kmalloc(sizeof(struct rfcomm_server_service), GFP_KERNEL);
 	memset(rfcomm_server, 0, sizeof(struct rfcomm_server_service));
 
 	rfcomm_conn_handler = kmalloc(sizeof(struct rfcomm_conn_handler), GFP_KERNEL);
 	memset(rfcomm_conn_handler, 0, sizeof(struct rfcomm_conn_handler));
 
-	bluem_dev = input_allocate_device();
-	if (!bluem_dev)
-	{
-		printk(KERN_ERR "BlueM: not enough memory for device allocation!\n");
-		return -ENOMEM;
-	}
-
-	bluem_dev->evbit[0] = BIT_MASK(EV_REL);
-	bluem_dev->relbit[0] = BIT_MASK(REL_X) | BIT_MASK(REL_Y) | BIT_MASK(REL_WHEEL);
-	bluem_dev->name = "BlueMMouse";
-
-	ret = input_register_device(bluem_dev);
-	if (ret)
-	{
-		printk(KERN_ERR "BlueM: failed to register device!\n");
-		return ret;
-	}
-
 	rfcomm_server_start();
-
-	printk(KERN_INFO "BlueM: BlueM initiated.\n");
 	return 0;
 }
 
@@ -459,9 +437,7 @@ static void __exit bluem_exit(void)
 		rfcomm_server = NULL;
 	}
 
-	input_unregister_device(bluem_dev);
-
-	printk(KERN_INFO "BlueM: BlueM module unloaded.\n");
+	printk(KERN_DEBUG "BlueM: BlueM module unloaded.\n");
 }
 
 module_init(bluem_init)
