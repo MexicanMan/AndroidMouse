@@ -55,6 +55,13 @@ struct rfcomm_server_service
 struct rfcomm_server_service *rfcomm_server;
 struct rfcomm_conn_handler *rfcomm_conn_handler;
 
+int handle_mouse_moving(unsigned char *buf)
+{
+	
+
+	return 0;
+}
+
 int rfcomm_server_receive(struct socket *sock, int id, struct sockaddr_rc *address, unsigned char *buf, int size, unsigned long flags)
 {
 	struct msghdr msg;
@@ -79,7 +86,7 @@ int rfcomm_server_receive(struct socket *sock, int id, struct sockaddr_rc *addre
 	do 
 	{
 		if (!skb_queue_empty(&sock->sk->sk_receive_queue))
-			printk(KERN_DEBUG "BlueM: recieve queue empty ? %s\n", skb_queue_empty(&sock->sk->sk_receive_queue)?"yes":"no");
+			printk(KERN_DEBUG "BlueM: is recieve queue empty? %s.\n", skb_queue_empty(&sock->sk->sk_receive_queue) ? "Yes" : "No");
 
 		len = kernel_recvmsg(sock, &msg, &vec, size, size, flags);
 	} 
@@ -152,7 +159,7 @@ int connection_handler(void *data)
 		{
 			if (memcmp(in_buf, "BYE", 3) == 0)
 			{
-				printk(KERN_DEBUG "BlueM: client left!\n");
+				printk(KERN_DEBUG "BlueM: client left.\n");
 				break;
 			}
 		}
@@ -464,7 +471,8 @@ static void __exit bluem_exit(void)
 	printk(KERN_INFO "BlueM: BlueM module unloaded.\n");
 }
 
-module_init(bluem_init)
-module_exit(bluem_exit)
+module_init(bluem_init);
+module_exit(bluem_exit);
+
 MODULE_LICENSE("GPL");
 MODULE_AUTHOR("Nazarenko Nikita");

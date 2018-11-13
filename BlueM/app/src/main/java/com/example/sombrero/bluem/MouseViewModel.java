@@ -22,6 +22,7 @@ public class MouseViewModel extends AndroidViewModel implements LifecycleObserve
     ///region Constants
 
     private final static String BYE_MESSAGE = "BYE";
+    private final static double EPS = 1e-1;
 
     ///endregion
 
@@ -78,12 +79,44 @@ public class MouseViewModel extends AndroidViewModel implements LifecycleObserve
             @Override
             public void onPropertyChanged(Observable sender, int propertyId) {
                 float[] values = sensorListener.getAxisValues().get();
-                xAxisValue.setValue(Float.toString(values[0]));
-                yAxisValue.setValue(Float.toString(values[1]));
-                zAxisValue.setValue(Float.toString(values[2]));
 
-                String xyValues = Float.toString(values[0]) + " " + Float.toString(values[1]);
-                bluetoothWriteThread.write(xyValues.getBytes());
+                char[] direction = new char[3];
+
+                if (values[1] > EPS)
+                    direction[0] = 'u';
+                else if (values[1] < -EPS)
+                    direction[0] = 'd';
+                else
+                    direction[0] = 'n';
+
+                if (values[0] > EPS)
+                    direction[1] = 'l';
+                else if (values[0] < -EPS)
+                    direction[1] = 'r';
+                else
+                    direction[1] = 'n';
+
+                int accel;
+                switch (sensorListener.sensorType) {
+                    case Sensor.TYPE_ROTATION_VECTOR:
+                        accel = (int) (Math.max(Math.abs(values[0]), Math.abs(values[1])) * 10);
+                        break;
+                    case Sensor.TYPE_LINEAR_ACCELERATION:
+                        accel = (int) (Math.max(Math.abs(values[0]), Math.abs(values[1])) + 1);
+                        break;
+                    default:
+                        accel = 1;
+                        break;
+                }
+                if (accel > 9)
+                    accel = 9;
+                direction[2] = (char) (accel + '0');
+
+                xAxisValue.setValue(Float.toString(values[0]) + " - " + direction[1]);
+                yAxisValue.setValue(Float.toString(values[1]) + " - " + direction[0]);
+                zAxisValue.setValue(Float.toString(values[2]) + " / " + direction[2]);
+
+                bluetoothWriteThread.write(new String(direction).getBytes());
             }
         });
     }
