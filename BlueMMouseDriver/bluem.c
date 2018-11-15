@@ -200,6 +200,20 @@ int connection_handler(void *data)
 				printk(KERN_DEBUG "BlueM: client left.\n");
 				break;
 			}
+			else if (memcmp(in_buf, "lk", 2) == 0)
+			{
+				input_report_key(bluem_dev, BTN_LEFT, 1);
+				input_sync(bluem_dev);
+				input_report_key(bluem_dev, BTN_LEFT, 0);
+				input_sync(bluem_dev);
+			}
+			else if (memcmp(in_buf, "rk", 2) == 0)
+			{
+				input_report_key(bluem_dev, BTN_RIGHT, 1);
+				input_sync(bluem_dev);
+				input_report_key(bluem_dev, BTN_RIGHT, 0);
+				input_sync(bluem_dev);
+			}
 			else 
 			{
 				handle_mouse_moving(in_buf, ret);
@@ -444,7 +458,8 @@ static int __init bluem_init(void)
 		return -ENOMEM;
 	}
 
-	bluem_dev->evbit[0] = BIT_MASK(EV_REL);
+	bluem_dev->evbit[0] = BIT_MASK(EV_KEY) | BIT_MASK(EV_REL);
+	bluem_dev->keybit[BIT_WORD(BTN_MOUSE)] = BIT_MASK(BTN_LEFT) | BIT_MASK(BTN_RIGHT) | BIT_MASK(BTN_MIDDLE);
 	bluem_dev->relbit[0] = BIT_MASK(REL_X) | BIT_MASK(REL_Y) | BIT_MASK(REL_WHEEL);
 	bluem_dev->name = "BlueMMouse";
 

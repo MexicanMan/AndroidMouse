@@ -35,12 +35,14 @@
                 android:id="@+id/leftBtn"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:onClick="@{() -> DataContext.OnLeftClick()}"
                 android:layout_weight="1" />
 
             <Button
                 android:id="@+id/rightBtn"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:onClick="@{() -> DataContext.OnRightClick()}"
                 android:layout_weight="1" />
         </LinearLayout>
 

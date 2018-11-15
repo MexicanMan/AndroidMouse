@@ -57,6 +57,8 @@ public class MouseViewModel extends AndroidViewModel implements LifecycleObserve
     private BluetoothManager.ConnectedWriteThread bluetoothWriteThread;
     private BaseEventListener sensorListener;
 
+    private float[] currAccel;
+
     public MouseViewModel(@NonNull Application application) {
         super(application);
 
@@ -64,6 +66,10 @@ public class MouseViewModel extends AndroidViewModel implements LifecycleObserve
         xAxisValue = new MyMutableLiveData<>();
         yAxisValue = new MyMutableLiveData<>();
         zAxisValue = new MyMutableLiveData<>();
+
+        currAccel = new float[2];
+        currAccel[0] = 0.0f;
+        currAccel[1] = 0.0f;
 
         MouseConfigSingleton mouseConfigSingleton = MouseConfigSingleton.getInstance();
         bluetoothWriteThread = mouseConfigSingleton.getBluetoothWriteThread();
@@ -101,17 +107,25 @@ public class MouseViewModel extends AndroidViewModel implements LifecycleObserve
 
                         accel = (int) (Math.max(Math.abs(values[0]), Math.abs(values[1])) * 10);
                         break;
-                    case Sensor.TYPE_LINEAR_ACCELERATION:
-                        if (values[1] > ACCEL_EPS)
+                    case Sensor.TYPE_ACCELEROMETER:
+                        if (Math.abs(values[0]) < 0.3 && Math.abs(values[1]) < 0.3) {
+                            currAccel[0] = 0;
+                            currAccel[1] = 0;
+                        } else {
+                            currAccel[0] += values[0]*10;
+                            currAccel[1] += values[1]*10;
+                        }
+
+                        if (currAccel[1] > ACCEL_EPS)
                             direction[0] = 'u';
-                        else if (values[1] < -ACCEL_EPS)
+                        else if (currAccel[1] < -ACCEL_EPS)
                             direction[0] = 'd';
                         else
                             direction[0] = 'n';
 
-                        if (values[0] > ACCEL_EPS)
+                        if (currAccel[0] > ACCEL_EPS)
                             direction[1] = 'l';
-                        else if (values[0] < -ACCEL_EPS)
+                        else if (currAccel[0] < -ACCEL_EPS)
                             direction[1] = 'r';
                         else
                             direction[1] = 'n';
@@ -135,9 +149,20 @@ public class MouseViewModel extends AndroidViewModel implements LifecycleObserve
         });
     }
 
+    public void OnLeftClick()
+    {
+        bluetoothWriteThread.write("lk".getBytes());
+    }
+
+    public void OnRightClick()
+    {
+        bluetoothWriteThread.write("rt".getBytes());
+    }
+
+
     @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
     public void OnActivityResume() {
-        sensorManager.registerListener(sensorListener, sensor, SensorManager.SENSOR_DELAY_GAME);
+        sensorManager.registerListener(sensorListener, sensor, SensorManager.SENSOR_DELAY_UI);
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)

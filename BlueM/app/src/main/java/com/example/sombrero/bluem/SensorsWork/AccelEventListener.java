@@ -6,7 +6,7 @@ import android.hardware.SensorEvent;
 public class AccelEventListener extends BaseEventListener {
 
     public AccelEventListener() {
-        super(Sensor.TYPE_LINEAR_ACCELERATION);
+        super(Sensor.TYPE_ACCELEROMETER);
     }
 
     @Override
