@@ -22,7 +22,8 @@ public class MouseViewModel extends AndroidViewModel implements LifecycleObserve
     ///region Constants
 
     private final static String BYE_MESSAGE = "BYE";
-    private final static double EPS = 1e-1;
+    private final static double GYRO_EPS = 1e-1;
+    private final static double ACCEL_EPS = 0.5;
 
     ///endregion
 
@@ -81,27 +82,40 @@ public class MouseViewModel extends AndroidViewModel implements LifecycleObserve
                 float[] values = sensorListener.getAxisValues().get();
 
                 char[] direction = new char[3];
-
-                if (values[1] > EPS)
-                    direction[0] = 'u';
-                else if (values[1] < -EPS)
-                    direction[0] = 'd';
-                else
-                    direction[0] = 'n';
-
-                if (values[0] > EPS)
-                    direction[1] = 'l';
-                else if (values[0] < -EPS)
-                    direction[1] = 'r';
-                else
-                    direction[1] = 'n';
-
                 int accel;
                 switch (sensorListener.sensorType) {
                     case Sensor.TYPE_ROTATION_VECTOR:
+                        if (values[1] > GYRO_EPS)
+                            direction[0] = 'u';
+                        else if (values[1] < -GYRO_EPS)
+                            direction[0] = 'd';
+                        else
+                            direction[0] = 'n';
+
+                        if (values[0] > GYRO_EPS)
+                            direction[1] = 'l';
+                        else if (values[0] < -GYRO_EPS)
+                            direction[1] = 'r';
+                        else
+                            direction[1] = 'n';
+
                         accel = (int) (Math.max(Math.abs(values[0]), Math.abs(values[1])) * 10);
                         break;
                     case Sensor.TYPE_LINEAR_ACCELERATION:
+                        if (values[1] > ACCEL_EPS)
+                            direction[0] = 'u';
+                        else if (values[1] < -ACCEL_EPS)
+                            direction[0] = 'd';
+                        else
+                            direction[0] = 'n';
+
+                        if (values[0] > ACCEL_EPS)
+                            direction[1] = 'l';
+                        else if (values[0] < -ACCEL_EPS)
+                            direction[1] = 'r';
+                        else
+                            direction[1] = 'n';
+
                         accel = (int) (Math.max(Math.abs(values[0]), Math.abs(values[1])) + 1);
                         break;
                     default:
