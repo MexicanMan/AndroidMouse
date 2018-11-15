@@ -24,6 +24,8 @@
 #define MAX_CONNS 1
 #define MODULE_NAME "BlueMServer"
 
+#define DEFAULT_SHIFT 5
+
 static int rfcomm_listener_stopped = 0;
 static int rfcomm_acceptor_stopped = 0;
 static int curr_conn = 0;
@@ -55,9 +57,48 @@ struct rfcomm_server_service
 struct rfcomm_server_service *rfcomm_server;
 struct rfcomm_conn_handler *rfcomm_conn_handler;
 
-int handle_mouse_moving(unsigned char *buf)
+int handle_mouse_moving(unsigned char *buf, int len)
 {
+	int shift_x = 0, shift_y = 0, accel = 0;
+
+	if (len != 3)
+	{
+		printk(KERN_ERR "BlueM: wrong incoming format for mouse!\n");
+		return -1;
+	}
+
+	accel = buf[2] - '0';
+
+	switch (buf[0])
+	{
+		case 'u':
+			shift_y = -DEFAULT_SHIFT;
+			break;
+		case 'd':
+			shift_y = DEFAULT_SHIFT;
+			break;
+		default:
+			shift_y = 0;
+	}
+
+	switch (buf[1])
+	{
+		case 'l':
+			shift_x = -DEFAULT_SHIFT;
+			break;
+		case 'r':
+			shift_x = DEFAULT_SHIFT;
+			break;
+		default:
+			shift_x = 0;
+	}
+
+	shift_x *= accel;
+	shift_y *= accel;
 	
+	input_report_rel(bluem_dev, REL_X, shift_x);
+	input_report_rel(bluem_dev, REL_Y, shift_y);
+	input_sync(bluem_dev);
 
 	return 0;
 }
@@ -93,9 +134,6 @@ int rfcomm_server_receive(struct socket *sock, int id, struct sockaddr_rc *addre
 	while (len == -EAGAIN || len == -ERESTARTSYS);
 
 	printk(KERN_DEBUG "BlueM: client sent: %s\n", buf);
-
-	input_report_rel(bluem_dev, REL_Y, -10);
-	input_sync(bluem_dev);
 
 	return len;
 }
@@ -161,6 +199,10 @@ int connection_handler(void *data)
 			{
 				printk(KERN_DEBUG "BlueM: client left.\n");
 				break;
+			}
+			else 
+			{
+				handle_mouse_moving(in_buf, ret);
 			}
 		}
 	}
