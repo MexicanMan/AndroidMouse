@@ -157,7 +157,6 @@ int connection_handler(void *data)
 		add_wait_queue(&accept_socket->sk->sk_wq->wait, &recv_wait);  
 		while (skb_queue_empty(&accept_socket->sk->sk_receive_queue))
 		{
-			printk("JOOOOOPA123123123123123123123123123123123");
 			__set_current_state(TASK_INTERRUPTIBLE);
 			schedule_timeout(HZ);
 
@@ -190,10 +189,8 @@ int connection_handler(void *data)
 				do_exit(0);
 			}
 			__set_current_state(TASK_RUNNING);
-			printk("JOOOOOPA5656565656565656565656565656");
 		}
 		remove_wait_queue(&accept_socket->sk->sk_wq->wait, &recv_wait);
-		printk("JOOOOOPA");
 
 		memset(in_buf, 0, len+1);
 		ret = rfcomm_server_receive(accept_socket, id, address, in_buf, len, MSG_DONTWAIT);
@@ -269,7 +266,6 @@ int rfcomm_server_accept(void)
 
 			while ((accept_err = socket->ops->accept(socket, accept_socket, O_NONBLOCK, false)) < 0)
 			{ 
-				printk("JDUACCEPTA00000000000000");
 				__set_current_state(TASK_INTERRUPTIBLE);
 				schedule_timeout(HZ);
 
@@ -292,8 +288,6 @@ int rfcomm_server_accept(void)
 					do_exit(0);
 				}
 				__set_current_state(TASK_RUNNING);
-
-				printk("JDUACCEPTA99999999999999999999999");
 			}
 			curr_conn += 1;
 			printk(KERN_DEBUG "BlueM: accept connection.\n");
@@ -341,7 +335,6 @@ int rfcomm_server_accept(void)
 			rfcomm_conn_handler->thread[id] = kthread_run((void *) connection_handler, (void *) data, MODULE_NAME);
 		}
 		
-		printk("JDUKOGDAOTVALIT00000000000000");
 		__set_current_state(TASK_INTERRUPTIBLE);
 		schedule_timeout(3*HZ);
 		
@@ -362,7 +355,6 @@ int rfcomm_server_accept(void)
 		}
 
 		__set_current_state(TASK_RUNNING);
-		printk("JDUKOGDAOTVALIT99999999999999999999999");
 	}
 }
 
