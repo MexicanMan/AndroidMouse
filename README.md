@@ -5,7 +5,7 @@ Current status: First version ready.
 
 Linux kernel version: 4.18
 
-## Launch note
+## Launch notes
 
 Android app (BlueM): 
 *  Open, build, install and launch BlueM android app.
