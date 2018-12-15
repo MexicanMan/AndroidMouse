@@ -8,10 +8,10 @@ Linux kernel version: 4.18
 ## Launch note
 
 Android app (BlueM): 
-  *Open, build, install and launch BlueM android app.
+*  Open, build, install and launch BlueM android app.
  
 Kernel module (BlueMMouseDriver):
-  *`make`;
-  *`sudo insmod bluem.ko`.
+*  `make`;
+*  `sudo insmod bluem.ko`.
   
  To unload module use `sudo rmmod bluem`.
