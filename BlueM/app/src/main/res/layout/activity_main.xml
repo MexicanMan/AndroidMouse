@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <import type="com.example.sombrero.bluem.SensorsWork.SensorType" />
+
+        <variable
+            name="DataContext"
+            type="com.example.sombrero.bluem.MainViewModel" />
+    </data>
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".Activities.MainActivity">
+
+        <TextView
+            android:id="@+id/pairedDeviceTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Choose one found paired device:"
+            android:textColor="@android:color/black"
+            app:layout_constraintHorizontal_bias="0.022"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ListView
+            android:id="@+id/pairedDevicesListView"
+            android:layout_width="350dp"
+            android:layout_height="130dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/listview_border"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/pairedDeviceTextView" />
+
+        <TextView
+            android:id="@+id/notFoundDevTextView"
+            android:layout_width="351dp"
+            android:layout_height="36dp"
+            android:layout_marginTop="8dp"
+            android:text="If your device not in the list above, pair it first in the bluetooth settings"
+            app:layout_constraintEnd_toEndOf="@+id/pairedDevicesListView"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/pairedDevicesListView"
+            app:layout_constraintTop_toBottomOf="@+id/pairedDevicesListView" />
+
+        <TextView
+            android:id="@+id/chooseControlTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="36dp"
+            android:text="Choose the prefered settings:"
+            android:textColor="@android:color/black"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.018"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/notFoundDevTextView" />
+
+        <RadioButton
+            android:id="@+id/invXRadioBtn"
+            android:layout_width="119dp"
+            android:layout_height="28dp"
+            android:layout_marginTop="8dp"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:buttonTint="@color/colorTeal"
+            android:checked="@{DataContext.isXInverted}"
+            android:onClick="@{() -> DataContext.setIsXInverted(!DataContext.isXInverted)}"
+            android:text="Invert X axis"
+            app:layout_constraintEnd_toEndOf="@+id/notFoundDevTextView"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/notFoundDevTextView"
+            app:layout_constraintTop_toBottomOf="@+id/chooseControlTextView" />
+
+        <RadioButton
+            android:id="@+id/invYRadioBtn"
+            android:layout_width="123dp"
+            android:layout_height="22dp"
+            android:layout_marginTop="8dp"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:buttonTint="@color/colorTeal"
+            android:checked="@{DataContext.isYInverted}"
+            android:onClick="@{() -> DataContext.setIsYInverted(!DataContext.isYInverted)}"
+            android:text="Invert Y axis"
+            app:layout_constraintEnd_toEndOf="@+id/invXRadioBtn"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/invXRadioBtn"
+            app:layout_constraintTop_toBottomOf="@+id/invXRadioBtn" />
+
+        <Button
+            android:id="@+id/connectBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginEnd="88dp"
+            android:layout_marginRight="88dp"
+            android:layout_marginBottom="8dp"
+            android:onClick="@{() -> DataContext.connectToBluetoothDevice()}"
+            android:text="Connect"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.04"
+            app:layout_constraintStart_toStartOf="parent" />
+
+    </android.support.constraint.ConstraintLayout>
+
+</layout>

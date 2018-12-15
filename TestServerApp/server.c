@@ -25,6 +25,7 @@ int main(void)
   	addr.rc_family = AF_BLUETOOTH;
   	bacpy(&addr.rc_bdaddr, BDADDR_ANY);
   	addr.rc_channel = htobs(CHANNEL);
+	printf("%d", htobs(CHANNEL));
   	alen = sizeof(addr);
 
   	if(bind(sock, (struct sockaddr *)&addr, alen) < 0)
