@@ -16,6 +16,9 @@ public class AccelEventListener extends BaseEventListener {
 
     @Override
     public final void onSensorChanged(SensorEvent event) {
+        if (event.sensor.getType() != sensorType)
+            return;
+
         axisValues.set(event.values);
         axisValues.notifyPropertyChanged(0);
     }

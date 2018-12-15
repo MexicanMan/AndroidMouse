@@ -4,6 +4,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorManager;
 
+// not used for now - TODO for future: linear phone movement (imitation of real mouse)
 public class GyroEventListener extends BaseEventListener {
 
     private float[] rotationMatrixFromVector;
@@ -25,15 +26,8 @@ public class GyroEventListener extends BaseEventListener {
 
     @Override
     public final void onSensorChanged(SensorEvent event) {
-        /*// Convert the rotation-vector to a 4x4 matrix.
-        SensorManager.getRotationMatrixFromVector(rotationMatrixFromVector, event.values);
-        SensorManager.remapCoordinateSystem(rotationMatrixFromVector, SensorManager.AXIS_X, SensorManager.AXIS_Z, rotationMatrix);
-        SensorManager.getOrientation(rotationMatrix, orientationVals);
-
-        // Optionally convert the result from radians to degrees
-        orientationVals[0] = (float) Math.toDegrees(orientationVals[0]);
-        orientationVals[1] = (float) Math.toDegrees(orientationVals[1]);
-        orientationVals[2] = (float) Math.toDegrees(orientationVals[2]);*/
+        if (event.sensor.getType() != sensorType)
+            return;
 
         axisValues.set(event.values);
         axisValues.notifyPropertyChanged(0);

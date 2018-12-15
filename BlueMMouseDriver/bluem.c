@@ -24,7 +24,7 @@
 #define MAX_CONNS 1
 #define MODULE_NAME "BlueMServer"
 
-#define DEFAULT_SHIFT 5
+#define DEFAULT_SHIFT 2
 
 static int rfcomm_listener_stopped = 0;
 static int rfcomm_acceptor_stopped = 0;
@@ -126,8 +126,8 @@ int rfcomm_server_receive(struct socket *sock, int id, struct sockaddr_rc *addre
 
 	do 
 	{
-		if (!skb_queue_empty(&sock->sk->sk_receive_queue))
-			printk(KERN_DEBUG "BlueM: is recieve queue empty? %s.\n", skb_queue_empty(&sock->sk->sk_receive_queue) ? "Yes" : "No");
+		//if (!skb_queue_empty(&sock->sk->sk_receive_queue))
+			//printk(KERN_DEBUG "BlueM: is recieve queue empty? %s.\n", skb_queue_empty(&sock->sk->sk_receive_queue) ? "Yes" : "No");
 
 		len = kernel_recvmsg(sock, &msg, &vec, size, size, flags);
 	} 
@@ -157,16 +157,18 @@ int connection_handler(void *data)
 		add_wait_queue(&accept_socket->sk->sk_wq->wait, &recv_wait);  
 		while (skb_queue_empty(&accept_socket->sk->sk_receive_queue))
 		{
+			printk("JOOOOOPA123123123123123123123123123123123");
 			__set_current_state(TASK_INTERRUPTIBLE);
 			schedule_timeout(HZ);
 
 			if (kthread_should_stop())
 			{
+				__set_current_state(TASK_RUNNING);
+
 				printk(KERN_DEBUG "BlueM: rfcomm server handle connection thread stopped.\n");
 
 				rfcomm_conn_handler->rfcomm_conn_handler_stopped[id] = 1;
 
-				__set_current_state(TASK_RUNNING);
 				remove_wait_queue(&accept_socket->sk->sk_wq->wait, &recv_wait);
 				kfree(rfcomm_conn_handler->data[id]->address);
 				kfree(rfcomm_conn_handler->data[id]);
@@ -187,9 +189,11 @@ int connection_handler(void *data)
 				rfcomm_conn_handler->thread[id] = NULL;
 				do_exit(0);
 			}
+			__set_current_state(TASK_RUNNING);
+			printk("JOOOOOPA5656565656565656565656565656");
 		}
-		__set_current_state(TASK_RUNNING);
 		remove_wait_queue(&accept_socket->sk->sk_wq->wait, &recv_wait);
+		printk("JOOOOOPA");
 
 		memset(in_buf, 0, len+1);
 		ret = rfcomm_server_receive(accept_socket, id, address, in_buf, len, MSG_DONTWAIT);
@@ -265,6 +269,7 @@ int rfcomm_server_accept(void)
 
 			while ((accept_err = socket->ops->accept(socket, accept_socket, O_NONBLOCK, false)) < 0)
 			{ 
+				printk("JDUACCEPTA00000000000000");
 				__set_current_state(TASK_INTERRUPTIBLE);
 				schedule_timeout(HZ);
 
@@ -287,6 +292,8 @@ int rfcomm_server_accept(void)
 					do_exit(0);
 				}
 				__set_current_state(TASK_RUNNING);
+
+				printk("JDUACCEPTA99999999999999999999999");
 			}
 			curr_conn += 1;
 			printk(KERN_DEBUG "BlueM: accept connection.\n");
@@ -332,25 +339,16 @@ int rfcomm_server_accept(void)
 			rfcomm_conn_handler->rfcomm_conn_handler_stopped[id] = 0;
 			rfcomm_conn_handler->data[id] = data;
 			rfcomm_conn_handler->thread[id] = kthread_run((void *) connection_handler, (void *) data, MODULE_NAME);
-
-			if (kthread_should_stop())
-			{
-				pr_info(KERN_DEBUG "BlueM: rfcomm server acceptor thread stopped in accept connecting.\n");
-				rfcomm_acceptor_stopped = 1;
-
-				return 0;
-			}
-							
-			if (signal_pending(current))
-			{
-				rfcomm_acceptor_stopped = 1;
-				do_exit(0);
-			}
 		}
+		
+		printk("JDUKOGDAOTVALIT00000000000000");
+		__set_current_state(TASK_INTERRUPTIBLE);
+		schedule_timeout(3*HZ);
 		
 		if (kthread_should_stop())
 		{
-			pr_info(KERN_DEBUG "BlueM: rfcomm server acceptor thread stopped in accept active waiting.\n");
+			__set_current_state(TASK_RUNNING);
+			pr_info(KERN_DEBUG "BlueM: rfcomm server acceptor thread stopped in accept active waiting for old client to leave.\n");
 			rfcomm_acceptor_stopped = 1;
 
 			return 0;
@@ -358,9 +356,13 @@ int rfcomm_server_accept(void)
 						
 		if (signal_pending(current))
 		{
+			__set_current_state(TASK_RUNNING);
 			rfcomm_acceptor_stopped = 1;
 			do_exit(0);
 		}
+
+		__set_current_state(TASK_RUNNING);
+		printk("JDUKOGDAOTVALIT99999999999999999999999");
 	}
 }
 

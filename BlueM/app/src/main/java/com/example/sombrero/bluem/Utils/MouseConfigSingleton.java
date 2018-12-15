@@ -6,8 +6,11 @@ import com.example.sombrero.bluem.SensorsWork.BaseEventListener;
 public class MouseConfigSingleton {
 
     private static MouseConfigSingleton instance;
+
     private BluetoothManager.ConnectedWriteThread bluetoothWriteThread;
     private BaseEventListener sensorListener;
+    private boolean isXInverted;
+    private boolean isYInverted;
 
     private MouseConfigSingleton() {  }
 
@@ -35,6 +38,22 @@ public class MouseConfigSingleton {
 
     public void setSensorListener(BaseEventListener sensorListener) {
         this.sensorListener = sensorListener;
+    }
+
+    public void setXInverted(boolean XInverted) {
+        isXInverted = XInverted;
+    }
+
+    public void setYInverted(boolean YInverted) {
+        isYInverted = YInverted;
+    }
+
+    public boolean getIsXInverted() {
+        return isXInverted;
+    }
+
+    public boolean getIsYInverted() {
+        return isYInverted;
     }
 
 }

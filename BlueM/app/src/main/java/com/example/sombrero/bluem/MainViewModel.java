@@ -52,6 +52,28 @@ public class MainViewModel extends ViewModel {
     }
 
     ///endregion
+    ///region isXInverted
+
+    private MyMutableLiveData<Boolean> isXInverted;
+    public MyMutableLiveData<Boolean> getIsXInverted() {
+        return isXInverted;
+    }
+    public void setIsXInverted(Boolean isXInverted) {
+        this.isXInverted.setValue(isXInverted);
+    }
+
+    ///endregion
+    ///region isXInverted
+
+    private MyMutableLiveData<Boolean> isYInverted;
+    public MyMutableLiveData<Boolean> getIsYInverted() {
+        return isYInverted;
+    }
+    public void setIsYInverted(Boolean isYInverted) {
+        this.isYInverted.setValue(isYInverted);
+    }
+
+    ///endregion
 
     private MouseConfigSingleton mouseConfigSingleton;
     private BluetoothManager.ConnectedWriteThread bluetoothWriteThread;
@@ -65,7 +87,10 @@ public class MainViewModel extends ViewModel {
         toastMessage = new MyMutableLiveData<>();
         pairedDevices = new MyMutableLiveData<>();
         sensorType = new MyMutableLiveData<>();
-        sensorType.setValue(SensorType.GYRO);
+        isXInverted = new MyMutableLiveData<>();
+        isYInverted = new MyMutableLiveData<>();
+        isXInverted.setValue(false);
+        isYInverted.setValue(false);
         mouseConfigSingleton = MouseConfigSingleton.getInstance();
 
         // BluetoothManager initiation and configuration
@@ -117,13 +142,12 @@ public class MainViewModel extends ViewModel {
 
     private void setupMouse() {
         BaseEventListener sensor;
-        if (sensorType.getValue() == SensorType.GYRO)
-            sensor = new GyroEventListener();
-        else
-            sensor = new AccelEventListener();
+        sensor = new AccelEventListener();
 
         mouseConfigSingleton.setBluetoothWriteThread(bluetoothWriteThread);
         mouseConfigSingleton.setSensorListener(sensor);
+        mouseConfigSingleton.setXInverted(isXInverted.getValue());
+        mouseConfigSingleton.setYInverted(isYInverted.getValue());
         activityScreen.setValue(ActivityScreenType.MOUSE_SCREEN);
     }
 

@@ -58,67 +58,60 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="36dp"
-            android:text="Choose one control option:"
+            android:text="Choose the prefered settings:"
             android:textColor="@android:color/black"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.018"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/notFoundDevTextView" />
 
-        <RadioGroup
-            android:id="@+id/controlRadioGroup"
-            android:layout_width="350dp"
-            android:layout_height="86dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="12dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/chooseControlTextView" >
+        <RadioButton
+            android:id="@+id/invXRadioBtn"
+            android:layout_width="119dp"
+            android:layout_height="28dp"
+            android:layout_marginTop="8dp"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:buttonTint="@color/colorTeal"
+            android:checked="@{DataContext.isXInverted}"
+            android:onClick="@{() -> DataContext.setIsXInverted(!DataContext.isXInverted)}"
+            android:text="Invert X axis"
+            app:layout_constraintEnd_toEndOf="@+id/notFoundDevTextView"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/notFoundDevTextView"
+            app:layout_constraintTop_toBottomOf="@+id/chooseControlTextView" />
 
-            <RadioButton
-                android:id="@+id/gyroRadioBtn"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:checked="@{DataContext.sensorType.equals(SensorType.GYRO)}"
-                android:onClick="@{() -> DataContext.onSensorTypeChanged(SensorType.GYRO)}"
-                android:text="Gyroscope"
-                android:buttonTint="@color/colorTeal"
-                android:background="@android:color/transparent" />
-
-            <RadioButton
-                android:id="@+id/accelRadioBtn"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:text="Accelerometer"
-                android:checked="@{DataContext.sensorType.equals(SensorType.ACCEL)}"
-                android:onClick="@{() -> DataContext.onSensorTypeChanged(SensorType.ACCEL)}"
-                android:buttonTint="@color/colorTeal"
-                android:background="@android:color/transparent" />
-        </RadioGroup>
+        <RadioButton
+            android:id="@+id/invYRadioBtn"
+            android:layout_width="123dp"
+            android:layout_height="22dp"
+            android:layout_marginTop="8dp"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:buttonTint="@color/colorTeal"
+            android:checked="@{DataContext.isYInverted}"
+            android:onClick="@{() -> DataContext.setIsYInverted(!DataContext.isYInverted)}"
+            android:text="Invert Y axis"
+            app:layout_constraintEnd_toEndOf="@+id/invXRadioBtn"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/invXRadioBtn"
+            app:layout_constraintTop_toBottomOf="@+id/invXRadioBtn" />
 
         <Button
             android:id="@+id/connectBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginEnd="88dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="88dp"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginEnd="88dp"
+            android:layout_marginRight="88dp"
+            android:layout_marginBottom="8dp"
             android:onClick="@{() -> DataContext.connectToBluetoothDevice()}"
             android:text="Connect"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.04"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/controlRadioGroup"
-            app:layout_constraintVertical_bias="0.861" />
+            app:layout_constraintStart_toStartOf="parent" />
 
     </android.support.constraint.ConstraintLayout>
 
