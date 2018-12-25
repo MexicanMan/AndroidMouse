@@ -47,7 +47,7 @@
             android:layout_width="351dp"
             android:layout_height="36dp"
             android:layout_marginTop="8dp"
-            android:text="If your device not in the list above, pair it first in the bluetooth settings"
+            android:text="If your device is not in the list above, pair it first in the bluetooth settings"
             app:layout_constraintEnd_toEndOf="@+id/pairedDevicesListView"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="@+id/pairedDevicesListView"
