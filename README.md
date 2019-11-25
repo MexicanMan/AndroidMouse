@@ -1,5 +1,5 @@
 # AndroidMouse (BlueM)
-Making an android-based bluetooth mouse for Ubuntu.
+The android-based bluetooth mouse for Ubuntu.
 
 Current status: First version ready.
 
@@ -15,3 +15,7 @@ Kernel module (BlueMMouseDriver):
 *  `sudo insmod bluem.ko`.
   
  To unload module use `sudo rmmod bluem`.
+
+## Android app user interface
+
+![alt text](https://sun9-42.userapi.com/c857120/v857120396/614cc/jWGrQ3jBHZM.jpg "Android UI")
